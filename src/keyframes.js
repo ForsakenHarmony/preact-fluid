@@ -22,5 +22,5 @@ const loading = keyframes`
 
 export default {
 	buttonEffect,
-	loading
+	loading,
 };

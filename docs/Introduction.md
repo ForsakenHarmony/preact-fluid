@@ -31,11 +31,11 @@ import { render } from 'preact';
 import { Button } from 'preact-fluid';
 
 function App() {
-  return (
-    <Button>
-            Hello World
-        </Button>
-  );
+	return (
+		<Button>
+			Hello World
+		</Button>
+	);
 }
 
 render(<App />, document.querySelector('#app'));

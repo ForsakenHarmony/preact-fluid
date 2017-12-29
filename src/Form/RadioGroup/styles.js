@@ -1,22 +1,26 @@
-import styled, {css} from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const StyledRadioGroup = styled.div`
 	.radio-item {
 		margin: 10px 0;
 
-		${props => props.horizontal && css`
-			margin: 0 10px;
-			display: inline-block;
-		`}
+		${props =>
+			props.horizontal &&
+			css`
+				margin: 0 10px;
+				display: inline-block;
+			`};
 	}
-	
-	${props => props.style && css`
-        ${props.style}
-	`}
-	
-	${props => props.disabled && css`
-		cursor: not-allowed;
-	`}
+
+	${props =>
+		props.style &&
+		css`
+			${props.style};
+		`} ${props =>
+			props.disabled &&
+			css`
+				cursor: not-allowed;
+			`};
 `;
 
 const StyledLabel = styled.label`
@@ -26,7 +30,4 @@ const StyledLabel = styled.label`
 	text-overflow: ellipsis;
 `;
 
-export {
-	StyledRadioGroup,
-	StyledLabel
-};
+export { StyledRadioGroup, StyledLabel };

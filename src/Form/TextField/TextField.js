@@ -2,7 +2,13 @@ import React, { Component } from 'preact';
 import PropTypes from 'prop-types';
 import Grid from '../../Layout/Grid';
 import Cell from '../../Layout/Cell';
-import { StyledInput, StyledLabel, StyledIcon, StyledBorder, StyledMessage } from './styles';
+import {
+	StyledInput,
+	StyledLabel,
+	StyledIcon,
+	StyledBorder,
+	StyledMessage,
+} from './styles';
 
 /**
  * TextField allow users to input text.
@@ -11,7 +17,6 @@ import { StyledInput, StyledLabel, StyledIcon, StyledBorder, StyledMessage } fro
  */
 class TextField extends Component {
 	static propTypes = {
-
 		/**
 		 * Custom styles
 		 */
@@ -23,32 +28,27 @@ class TextField extends Component {
 		onChange: PropTypes.func,
 
 		grid: PropTypes.object,
-		
-		cell: PropTypes.object
 
+		cell: PropTypes.object,
 	};
 
 	static defaultProps = {
 		style: '',
-		grid :{
-            columns: '1fr 2fr'
-        }, 
-        cell : {
-            middle: true
+		grid: {
+			columns: '1fr 2fr',
 		},
-		hideLabel: false
+		cell: {
+			middle: true,
+		},
+		hideLabel: false,
 	};
 
 	static contextTypes = {
-		theme: PropTypes.object
+		theme: PropTypes.object,
 	};
 
-	get label () {
-		const {
-			label='', 
-			hideLabel=false,
-			cell={}
-		} = this.props;
+	get label() {
+		const { label = '', hideLabel = false, cell = {} } = this.props;
 
 		if (hideLabel) {
 			return '';
@@ -61,33 +61,31 @@ class TextField extends Component {
 		);
 	}
 
-	onChange = (input) => {
+	onChange = input => {
 		if (typeof this.props.onChange === 'function') {
 			this.props.onChange(input);
 		}
-	}
+	};
 
-	renderErrorMessage = (errorText) => {
+	renderErrorMessage = errorText => {
 		if (!errorText) {
 			return '';
 		}
-		return (
-			<StyledMessage>{errorText}</StyledMessage>
-		);
-	}
+		return <StyledMessage>{errorText}</StyledMessage>;
+	};
 
 	render() {
-		const { 
-			className, 
-			style, 
-			grid, 
-			cell, 
-			effect='',
-			placeholder='', 
-			icon='', 
-			disabled=false,
-			value='',
-			errorText=''
+		const {
+			className,
+			style,
+			grid,
+			cell,
+			effect = '',
+			placeholder = '',
+			icon = '',
+			disabled = false,
+			value = '',
+			errorText = '',
 		} = this.props;
 		const { theme } = this.context;
 
@@ -105,7 +103,7 @@ class TextField extends Component {
 							disabled={disabled}
 							value={value}
 							errorText={errorText}
-						    theme={theme}
+							theme={theme}
 						/>
 						<StyledIcon>{icon}</StyledIcon>
 						<StyledBorder
@@ -114,7 +112,7 @@ class TextField extends Component {
 							errorText={errorText}
 							theme={theme}
 						>
-							<i></i>
+							<i />
 						</StyledBorder>
 					</div>
 					{this.renderErrorMessage(errorText)}

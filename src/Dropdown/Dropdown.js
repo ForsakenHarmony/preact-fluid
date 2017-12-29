@@ -9,149 +9,143 @@ import { StyledDropdown, slideDown, slideUp } from './styles';
  * @example ./../../docs/components/Dropdown.md
  */
 class Dropdown extends Component {
-    static propTypes = {
-        /**
-         * Dropdown component to be toggled eg. List
-         */
-        component: PropTypes.element,
+	static propTypes = {
+		/**
+		 * Dropdown component to be toggled eg. List
+		 */
+		component: PropTypes.element,
 
-        /**
-         * Open dropdown dropdown callback function
-         */
-        openDropdown: PropTypes.func,
+		/**
+		 * Open dropdown dropdown callback function
+		 */
+		openDropdown: PropTypes.func,
 
-        /**
-         * Close dropdown dropdown callback function
-         */
-        closeDropdown: PropTypes.func,
+		/**
+		 * Close dropdown dropdown callback function
+		 */
+		closeDropdown: PropTypes.func,
 
-        /**
-         * Toggle dropdown callback function
-         */
-        toggleDropdown: PropTypes.func,
+		/**
+		 * Toggle dropdown callback function
+		 */
+		toggleDropdown: PropTypes.func,
 
-        /**
-         * Custom styles
-         */
-        style: PropTypes.object,
-    };
+		/**
+		 * Custom styles
+		 */
+		style: PropTypes.object,
+	};
 
-    static defaultProps = {
-        component: '',
-    };
+	static defaultProps = {
+		component: '',
+	};
 
-    static contextTypes = {
-        theme: PropTypes.object,
-    };
+	static contextTypes = {
+		theme: PropTypes.object,
+	};
 
-    componentDidMount() {
-        document.body.addEventListener('click', this.handleClickOutside);
-    }
+	handleClickOutside = event => {
+		const outsideDropdown =
+			this.dropdown && !this.dropdown.contains(event.target);
+		const outsideWrapper = this.wrapper && !this.wrapper.contains(event.target);
 
-    componentWillUnmount() {
-        document.body.removeEventListener('click', this.handleClickOutside);
-    }
+		if (outsideDropdown && outsideWrapper) {
+			this.closeDropdown();
+		}
+	};
 
-    handleClickOutside = event => {
-        const outsideDropdown =
-            this.dropdown && !this.dropdown.contains(event.target);
-        const outsideWrapper =
-            this.wrapper && !this.wrapper.contains(event.target);
+	toggleDropdown = () => {
+		const { toggleDropdown } = this.props;
 
-        if (outsideDropdown && outsideWrapper) {
-            this.closeDropdown();
-        }
-    };
+		this.setState(
+			{
+				isOpened: !this.state.isOpened,
+			},
+			() => {
+				if (typeof toggleDropdown === 'function') {
+					toggleDropdown(this.state.isOpened);
+				}
+			}
+		);
+	};
 
-    toggleDropdown = () => {
-        const { toggleDropdown } = this.props;
+	closeDropdown = () => {
+		const { closeDropdown } = this.props;
+		this.setState(
+			{
+				isOpened: false,
+			},
+			() => {
+				if (typeof closeDropdown === 'function') {
+					closeDropdown();
+				}
+			}
+		);
+	};
 
-        this.setState(
-            {
-                isOpened: !this.state.isOpened,
-            },
-            () => {
-                if (typeof toggleDropdown === 'function') {
-                    toggleDropdown(this.state.isOpened);
-                }
-            }
-        );
-    };
+	openDropdown = () => {
+		const { openDropdown } = this.props;
 
-    closeDropdown = () => {
-        const { closeDropdown } = this.props;
-        this.setState(
-            {
-                isOpened: false,
-            },
-            () => {
-                if (typeof closeDropdown === 'function') {
-                    closeDropdown();
-                }
-            }
-        );
-    };
+		this.setState(
+			{
+				isOpened: true,
+			},
+			() => {
+				if (typeof openDropdown() === 'function') {
+					openDropdown();
+				}
+			}
+		);
+	};
 
-    openDropdown = () => {
-        const { openDropdown } = this.props;
+	wrapperRef = comp => {
+		this.wrapper = comp;
+	};
 
-        this.setState(
-            {
-                isOpened: true,
-            },
-            () => {
-                if (typeof openDropdown() === 'function') {
-                    openDropdown();
-                }
-            }
-        );
-    };
+	componentDidMount() {
+		document.body.addEventListener('click', this.handleClickOutside);
+	}
 
-    renderDropDown = () => {
-        const { isOpened = null } = this.state;
-        const { component } = this.props;
+	componentWillUnmount() {
+		document.body.removeEventListener('click', this.handleClickOutside);
+	}
 
-        return (
-            <Animate
-                component={component}
-                animation={{
-                    name: isOpened ? slideDown : slideUp,
-                    duration: '300ms',
-                    iterationCount: 1,
-                    timingFunction: 'linear',
-                    fillMode: 'forwards',
-                }}
-            />
-        );
-    };
+	renderDropDown = () => {
+		const { isOpened = null } = this.state;
+		const { component } = this.props;
 
-    render() {
-        const { style = {}, className, children } = this.props;
-        const { theme } = this.context;
+		return (
+			<Animate
+				component={component}
+				animation={{
+					name: isOpened ? slideDown : slideUp,
+					duration: '300ms',
+					iterationCount: 1,
+					timingFunction: 'linear',
+					fillMode: 'forwards',
+				}}
+			/>
+		);
+	};
 
-        return (
-            <StyledDropdown
-                style={style}
-                className={className}
-                theme={theme}
-                innerRef={comp => (this.wrapper = comp)}
-            >
-                <div
-                    onClick={() => {
-                        this.toggleDropdown();
-                    }}
-                >
-                    {children}
-                </div>
-                <div
-                    className={`dropdown`}
-                    ref={comp => (this.dropdown = comp)}
-                >
-                    {this.renderDropDown()}
-                </div>
-            </StyledDropdown>
-        );
-    }
+	render() {
+		const { style = {}, className, children } = this.props;
+		const { theme } = this.context;
+
+		return (
+			<StyledDropdown
+				style={style}
+				className={className}
+				theme={theme}
+				innerRef={this.wrapperRef}
+			>
+				<div onClick={this.toggleDropdown}>{children}</div>
+				<div className={`dropdown`} ref={comp => (this.dropdown = comp)}>
+					{this.renderDropDown()}
+				</div>
+			</StyledDropdown>
+		);
+	}
 }
 
 export default Dropdown;

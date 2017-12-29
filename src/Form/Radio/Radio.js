@@ -11,51 +11,45 @@ import { StyledRadio, StyledLabel } from './styles';
  */
 class Radio extends Component {
 	static propTypes = {
-
 		/**
 		 * Custom styles
 		 */
-        style: PropTypes.string,
-        
-        /**
+		style: PropTypes.string,
+
+		/**
 		 * onChange
 		 */
-        onChange: PropTypes.func,
-        
-        grid: PropTypes.object,
+		onChange: PropTypes.func,
 
-        cell: PropTypes.object,
+		grid: PropTypes.object,
 
-        effect: PropTypes.oneOf(['default', 'circle', 'drop']),
+		cell: PropTypes.object,
 
-        bgColor: PropTypes.string,
+		effect: PropTypes.oneOf(['default', 'circle', 'drop']),
 
-        highlightColor: PropTypes.string
+		bgColor: PropTypes.string,
 
-    };
+		highlightColor: PropTypes.string,
+	};
 
-    static defaultProps = {
-        grid :{
-            columns: '36px 2fr',
-	        gap: '15px'
-        }, 
-        cell : {
-            middle: true
-        },
-        effect: 'default',
-	    checked: false
-    };
+	static defaultProps = {
+		grid: {
+			columns: '36px 2fr',
+			gap: '15px',
+		},
+		cell: {
+			middle: true,
+		},
+		effect: 'default',
+		checked: false,
+	};
 
 	static contextTypes = {
-		theme: PropTypes.object
+		theme: PropTypes.object,
 	};
-    
-    get label () {
-		const {
-			label='', 
-			hideLabel=false,
-			cell={}
-		} = this.props;
+
+	get label() {
+		const { label = '', hideLabel = false, cell = {} } = this.props;
 
 		if (hideLabel) {
 			return '';
@@ -66,45 +60,50 @@ class Radio extends Component {
 				<StyledLabel for={label}>{label}</StyledLabel>
 			</Cell>
 		);
-    }
-
-    handleOptionChange = (input) => {
-		if (typeof this.props.onChange === 'function') {
-			this.props.onChange(input);
-		}
 	}
-    
+
+	handleOptionChange = () => {
+		if (typeof this.props.onChange === 'function') {
+			this.props.onChange(this.radioBtn);
+		}
+	};
+
 	render() {
-        const { 
-            style = {}, 
-            className,
-            value='',
-            disabled=false,
-            grid,
-            cell,
-            effect,
-	        checked
-        } = this.props;
+		const {
+			style = {},
+			className,
+			value = '',
+			grid,
+			cell,
+			effect,
+			checked,
+		} = this.props;
 		const { theme } = this.context;
-        
+
 		return (
-            <Grid {...grid} alignContent="space-around">
-                <Cell {...cell}>
-                    <StyledRadio className={className} onClick={() => {this.handleOptionChange(this.radioBtn)}} {...this.props}>
-                        <input
-                            className={`radio ${effect}`}
-                            style={style}
-                            type="radio"
-                            value={value}
-                            checked={checked}
-                            theme={theme}
-                            ref={(input) => { this.radioBtn = input; }}
-                        />
-                        <label></label>
-                    </StyledRadio>
-                </Cell>
-                {this.label} 
-            </Grid>
+			<Grid {...grid} alignContent="space-around">
+				<Cell {...cell}>
+					<StyledRadio
+						className={className}
+						onClick={this.handleOptionChange}
+						{...this.props}
+					>
+						<input
+							className={`radio ${effect}`}
+							style={style}
+							type="radio"
+							value={value}
+							checked={checked}
+							theme={theme}
+							ref={input => {
+								this.radioBtn = input;
+							}}
+						/>
+						<label />
+					</StyledRadio>
+				</Cell>
+				{this.label}
+			</Grid>
 		);
 	}
 }

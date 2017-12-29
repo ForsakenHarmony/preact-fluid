@@ -18,25 +18,25 @@
 
 ```js
 <Button 
-    primary
-    left={
-    	<Icon
-            name="envelope-o"
-            size="xsmall"
-        />
-    }
+		primary
+		left={
+			<Icon
+						name="envelope-o"
+						size="xsmall"
+				/>
+		}
 >Email</Button>
 ```
 
 ```js
 <Button 
-    primary
-    right={
-    	<Icon
-            name="chevron-down"
-            size="xsmall"
-        />
-    }
+		primary
+		right={
+			<Icon
+						name="chevron-down"
+						size="xsmall"
+				/>
+		}
 >Choose Country</Button>
 ```
 

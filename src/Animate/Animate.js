@@ -9,120 +9,121 @@ import Animations from './../Animations';
  * @example ./../../docs/components/Animate.md
  */
 class Animate extends Component {
-    static propTypes = {
-        /**
-         * Component to be animated
-         */
-        component: PropTypes.element.isRequired,
+	static propTypes = {
+		/**
+		 * Component to be animated
+		 */
+		component: PropTypes.element.isRequired,
 
-        /**
-         * Animation properties
-         */
-        animation: PropTypes.shape({
-            active: PropTypes.bool,
-            duration: PropTypes.number,
-            timingFunction: PropTypes.string,
-            delay: PropTypes.string,
-            iterationCount: PropTypes.number,
-            direction: PropTypes.string,
-            fillMode: PropTypes.string,
-            playState: PropTypes.string,
-            onStart: PropTypes.func,
-            onComplete: PropTypes.func,
-            onIteration: PropTypes.func,
-        }),
+		/**
+		 * Animation properties
+		 */
+		animation: PropTypes.shape({
+			active: PropTypes.bool,
+			duration: PropTypes.number,
+			timingFunction: PropTypes.string,
+			delay: PropTypes.string,
+			iterationCount: PropTypes.number,
+			direction: PropTypes.string,
+			fillMode: PropTypes.string,
+			playState: PropTypes.string,
+			onStart: PropTypes.func,
+			onComplete: PropTypes.func,
+			onIteration: PropTypes.func,
+		}),
 
-        /**
-         * Element attributes
-         */
-        attrs: PropTypes.object,
-    };
+		/**
+		 * Element attributes
+		 */
+		attrs: PropTypes.object,
+	};
 
-    static defaultProps = {
-        animation: {},
-        attrs: {},
-    };
+	static defaultProps = {
+		animation: {},
+		attrs: {},
+	};
 
-    componentWillMount() {
-        const { component } = this.props;
-        this.component = props =>
-            cloneElement(component, {
-                ...props,
-            });
-    }
+	compRef = comp => {
+		this.comp = comp;
+	};
 
-    componentDidMount() {
-        if (this.comp) {
-            this.comp
-                .getDOMNode()
-                .addEventListener('animationstart', this.handleAnimationStart);
-            this.comp
-                .getDOMNode()
-                .addEventListener('animationend', this.handleAnimationComplete);
-            this.comp
-                .getDOMNode()
-                .addEventListener(
-                    'animationiteration',
-                    this.handleAnimationIteration
-                );
-        }
-    }
+	handleAnimationStart = () => {
+		const { animation } = this.props;
+		if (animation && typeof animation.onStart === 'function') {
+			animation.onStart(this.comp, animation);
+		}
+	};
 
-    handleAnimationStart = () => {
-        const { animation } = this.props;
-        if (animation && typeof animation.onStart === 'function') {
-            animation.onStart(this.comp, animation);
-        }
-    };
+	handleAnimationComplete = () => {
+		const { animation } = this.props;
+		if (animation && typeof animation.onComplete === 'function') {
+			animation.onComplete(this.comp, animation);
+		}
+	};
 
-    handleAnimationComplete = () => {
-        const { animation } = this.props;
-        if (animation && typeof animation.onComplete === 'function') {
-            animation.onComplete(this.comp, animation);
-        }
-    };
+	handleAnimationIteration = () => {
+		const { animation } = this.props;
+		if (animation && typeof animation.onIteration === 'function') {
+			animation.onIteration(this.comp, animation);
+		}
+	};
 
-    handleAnimationIteration = () => {
-        const { animation } = this.props;
-        if (animation && typeof animation.onIteration === 'function') {
-            animation.onIteration(this.comp, animation);
-        }
-    };
+	componentWillMount() {
+		const { component } = this.props;
+		this.component = props =>
+			cloneElement(component, {
+				...props,
+			});
+	}
 
-    render() {
-        const { animation, attrs = {} } = this.props;
+	componentDidMount() {
+		if (this.comp) {
+			this.comp
+				.getDOMNode()
+				.addEventListener('animationstart', this.handleAnimationStart);
+			this.comp
+				.getDOMNode()
+				.addEventListener('animationend', this.handleAnimationComplete);
+			this.comp
+				.getDOMNode()
+				.addEventListener('animationiteration', this.handleAnimationIteration);
+		}
+	}
 
-        const {
-            duration = '500ms',
-            timingFunction = 'linear',
-            delay = '0s',
-            iterationCount = 0,
-            direction = '',
-            fillMode = '',
-            playState = '',
-            active = true,
-        } = animation;
+	render() {
+		const { animation, attrs = {} } = this.props;
 
-        const name = Animations[animation.name] || animation.name || '';
+		const {
+			duration = '500ms',
+			timingFunction = 'linear',
+			delay = '0s',
+			iterationCount = 0,
+			direction = '',
+			fillMode = '',
+			playState = '',
+			active = true,
+		} = animation;
 
-        const AnimatedComponent = styled(this.component).attrs({
-            ...attrs,
-        })`
-            ${active &&
-                css`
-                    animation-name: ${name};
-                    animation-duration: ${duration};
-                    animation-timing-function: ${timingFunction};
-                    animation-delay: ${delay};
-                    animation-iteration-count: ${iterationCount};
-                    animation-direction: ${direction};
-                    animation-fill-mode: ${fillMode};
-                    animation-play-state: ${playState};
-                `};
-        `;
+		const name = Animations[animation.name] || animation.name || '';
 
-        return <AnimatedComponent innerRef={comp => (this.comp = comp)} />;
-    }
+		const AnimatedComponent = styled(this.component).attrs({
+			...attrs,
+		})`
+			${active &&
+				css`
+					animation-name: ${name};
+					animation-duration: ${duration};
+					animation-timing-function: ${timingFunction};
+					animation-delay: ${delay};
+					animation-iteration-count: ${iterationCount};
+					animation-direction: ${direction};
+					animation-fill-mode: ${fillMode};
+					animation-play-state: ${playState};
+				`};
+		`;
+
+		return <AnimatedComponent innerRef={this.compRef} />;
+	}
 }
 
 export default Animate;

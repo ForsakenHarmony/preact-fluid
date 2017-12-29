@@ -9,9 +9,7 @@ import ListItem from './../src/List/ListItem';
 import ListFooter from './../src/List/ListFooter';
 import Cell from './../src/Layout/Cell';
 import ThemeProvider from './../src/ThemeProvider/ThemeProvider';
-import lodash from 'lodash';
 
-global.lodash = lodash;
 global.CardHeader = CardHeader;
 global.CardImage = CardImage;
 global.CardBody = CardBody;
